@@ -6,35 +6,38 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.wiredbraincoffee.productapiannotation.controller.ProductController;
 import com.wiredbraincoffee.productapiannotation.model.Product;
 import com.wiredbraincoffee.productapiannotation.model.ProductEvent;
 import com.wiredbraincoffee.productapiannotation.repository.ProductRepository;
 
 import reactor.test.StepVerifier;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ProductApiAnnotationApplicationTests {
+public class JUnit5ApplicationContextTest {
 	
-	private WebTestClient client;
+private WebTestClient client;
 	
 	private List<Product> expectedList;
 	
 	@Autowired
 	private ProductRepository productRepository;
 	
+	@Autowired
+	private ApplicationContext context;
+	
 	@BeforeEach
 	public void beforeEach() {
-		this.client = WebTestClient.bindToController(new ProductController(productRepository))
+		this.client = WebTestClient.bindToApplicationContext(context)
 				.configureClient()
 				.baseUrl("/products")
 				.build();
